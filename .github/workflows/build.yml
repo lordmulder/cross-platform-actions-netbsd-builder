@@ -20,10 +20,6 @@ jobs:
     strategy:
         matrix:
           version:
-            - 9.2
-            - 9.3
-            - 9.4
-            - '10.0'
             - '10.1'
 
           architecture:
@@ -31,26 +27,6 @@ jobs:
               qemu: x86
               qemu_executable: x86_64
               uname: amd64
-
-            - name: arm64
-              qemu: aarch64
-              uname: aarch64
-
-          exclude:
-            - version: 9.2
-              architecture:
-                name: arm64
-                qemu: aarch64
-
-            - version: 9.3
-              architecture:
-                name: arm64
-                qemu: aarch64
-
-            - version: 9.4
-              architecture:
-                name: arm64
-                qemu: aarch64
 
     steps:
       - name: Clone Repository
@@ -82,6 +58,9 @@ jobs:
 
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
+
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
 
       - name: Build Image
         run: |
@@ -122,7 +101,7 @@ jobs:
             [ "`uname -s`" = 'NetBSD' ]
             [ "`uname -r`" = '${{ matrix.version }}' ]
             [ "`uname -m`" = '${{ matrix.architecture.uname || matrix.architecture.name }}' ] || [ "`uname -p`" = '${{ matrix.architecture.uname || matrix.architecture.name }}' ]
-            [ "`pwd`" = '/home/runner/work/netbsd-builder/netbsd-builder' ]
+            [ "`pwd`" = '/home/runner/work/cross-platform-actions-netbsd-builder/cross-platform-actions-netbsd-builder' ]
             [ "`hostname`" = 'runnervmg1sw1.local' ]
             cat host_to_guest.txt | grep -q 'host to guest'
             echo 'guest to host' > guest_to_host.txt
