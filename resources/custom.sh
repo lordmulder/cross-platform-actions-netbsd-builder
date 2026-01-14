@@ -8,7 +8,7 @@ export CARGO_HOME=/opt/rust/cargo
 # Add your additional provisioning here for custom VM images.
 pkgin update
 pkgin upgrade
-pkgin -y install clang
+pkgin -y install git clang
 
 mkdir -p /opt/sysroot/i386
 curl -sSf https://cdn.netbsd.org/pub/NetBSD/NetBSD-10.1/i386/binary/sets/base.tgz | tar -C /opt/sysroot/i386 -xzf - lib usr/lib
