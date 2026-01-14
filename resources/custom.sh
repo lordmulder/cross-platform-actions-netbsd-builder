@@ -15,7 +15,7 @@ curl -sSf https://cdn.netbsd.org/pub/NetBSD/NetBSD-10.1/i386/binary/sets/base.tg
 curl -sSf https://cdn.netbsd.org/pub/NetBSD/NetBSD-10.1/i386/binary/sets/comp.tgz | tar -C /opt/sysroot/i386 -xzf - usr/lib
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.92.0
 
-/opt/rust/cargo/bin/rustup component add rust-src
+ /opt/rust/cargo/bin/rustup component add rust-src
 
 echo '#!/bin/sh' > /opt/rust/cargo/env
 echo 'export PATH="/opt/rust/cargo/bin:$PATH"' >> /opt/rust/cargo/env
