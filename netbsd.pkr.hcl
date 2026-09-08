@@ -152,6 +152,15 @@ variable "pkgin_network_information_step" {
   description = "Step to confirm network information during pkgin install"
 }
 
+variable "pkgin_install_steps" {
+  default = [
+    ["x<enter><wait2m>", "Install pkgin and update package summary"],
+    ["<enter><wait5>", "Hit enter to continue"]
+  ]
+  type = list(list(string))
+  description = "Steps to install pkgin from the repository the installer derived from the release version, or to abandon that step on a release pkgsrc publishes no package set for"
+}
+
 variable "post_install_disk_device" {
   type = string
   description = "The disk device to mount during post install"
@@ -298,10 +307,19 @@ source "qemu" "qemu" {
     var.pkgin_network_information_step,
 
     [
-      ["i<enter><wait5>", "Download via http -> ftp"],
-      ["x<enter><wait2m>", "Install pkgin and update package summary"],
-      ["<enter><wait5>", "Hit enter to continue"],
+      ["i<enter><wait5>", "Download via http -> ftp"]
+    ],
 
+    // Installing pkgin here is what makes the repository usable, and sysinst
+    // retries it in an unbounded loop: a failed `pkg_add` redisplays this menu
+    // rather than reporting anything, so every keystroke meant for a later
+    // screen lands back in it and the install never finishes. A release that
+    // pkgsrc publishes no package set for therefore has to abandon the step
+    // explicitly instead of letting it fail; provision.sh installs pkgin from
+    // `package_repository` in that case.
+    var.pkgin_install_steps,
+
+    [
       ["x<enter><wait5>", "Finished configuring"],
       ["<enter><wait5>", "Hit enter to continue"],
 

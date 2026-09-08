@@ -11,6 +11,19 @@ setup_path() {
   export PATH
 }
 
+# Where sysinst could not install pkgin itself, because pkgsrc publishes no
+# package set for the release and the repository sysinst derives from the
+# release version is a 404. The build abandons that step there (see
+# `pkgin_install_steps`), so pkgin is added here from the repository the build
+# was pointed at, which is the same one configure_package_repository then hands
+# to pkgin. `pkg_add` has no configuration to read a repository from -- that is
+# what pkgin's own repositories.conf is -- so it has to be given one.
+install_pkgin() {
+  command -v pkgin > /dev/null 2>&1 && return 0
+
+  PKG_PATH="$PACKAGE_REPOSITORY" pkg_add -U pkgin
+}
+
 # The repository the installer configures is the one for the release, which
 # tracks whatever pkgsrc branch is current. When a bulk build for that branch
 # is only partly finished, the published package index is missing packages that
@@ -247,6 +260,7 @@ setup_passwordless_login
 configure_boot_scripts
 set_hostname
 
+install_pkgin
 configure_package_repository
 install_extra_packages
 setup_sudo

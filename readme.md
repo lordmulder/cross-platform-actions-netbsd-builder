@@ -39,6 +39,14 @@ release instead of the official mirrors, which carry no vax binaries. The
 `pkgin` in the image is pointed at that same release, so more packages can be
 installed from it.
 
+Some releases have no pkgsrc package set of their own published for them, 9.5
+being the first. The repository the installer derives from the release version
+is then a 404, so the version's variables file names a quarterly branch for the
+same ABI to install from instead, and the installer's own "install pkgin" step
+is abandoned rather than left to fail: sysinst retries that step by
+redisplaying its menu, without a bound and without saying so on the console,
+which swallows every keystroke meant for the screens after it.
+
 Except for the root user, there's one additional user, `runner`, which is the
 user that will be running the commands in the GitHub action. This user is
 allowed use `sudo` without a password.
@@ -84,6 +92,7 @@ The following architectures and versions are supported:
 | 11.0    | ✓      | ✓     | ✓   |
 | 10.1    | ✓      | ✓     | ✓   |
 | 10.0    | ✓      | ✓     | ✗   |
+| 9.5     | ✓      | ✗     | ✗   |
 | 9.4     | ✓      | ✗     | ✗   |
 | 9.3     | ✓      | ✗     | ✗   |
 | 9.2     | ✓      | ✗     | ✗   |
